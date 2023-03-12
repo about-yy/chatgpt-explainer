@@ -18,12 +18,8 @@
 
 ## 技術情報
 
-この拡張機能はTypeScriptで開発されています。以下のライブラリを使用しています。
-
-- axios
-- dotenv
-- webpack
-- webpack-cli
+この拡張機能はTypeScriptで開発されています。
+この拡張機能は、ChatGPTの回答に人間の手を加えて作成しました。
 
 ## 著者
 
