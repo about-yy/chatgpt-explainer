@@ -3,11 +3,6 @@
   "name": "ChatGPT Explainer",
   "version": "1.0.0",
   "description": "この拡張機能は、ブラウザ上で選択したテキストをChatGPTが説明することができる拡張機能です。選択したテキストを右クリックし、コンテキストメニューからChatGPTを選択すると、ポップアップが表示され、ChatGPTによる説明が得られます。.",
-
-  "browser_action": {
-    "default_popup": "src/popup.html",
-    "default_title": "ChatGPT Explainer"
-  },
   "permissions": [
     "activeTab",
     "storage",

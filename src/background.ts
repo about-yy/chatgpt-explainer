@@ -1,35 +1,55 @@
-console.log("background script loaded");
-const API_KEY = "YOUR_API_KEY";
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "query") {
-    fetch(`https://api.openai.com/v1/engines/davinci-codex/completions?prompt=${request.query}&max_tokens=1024&n=1&stop=%5B%22%5Cn%22%5D`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${API_KEY}`
+
+const API_ENDPOINT = 'https://api.openai.com/v1/';
+
+async function queryGPT(text: string, model: string, apiKey: string) {
+  const response = await fetch(`${API_ENDPOINT}engines/${model}/completions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      prompt: text,
+      max_tokens: 50,
+      n: 1,
+      stop: '\n',
+    })
+  });
+  const result = await response.json();
+  return result.choices[0].text.trim();
+}
+
+async function getApiKey() {
+  const { apiKey } = await chrome.storage.sync.get('apiKey');
+  return apiKey;
+}
+
+async function setApiKey(apiKey: string) {
+  await chrome.storage.sync.set({ apiKey });
+}
+
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  if (message.type === 'query') {
+    try {
+      const apiKey = await getApiKey();
+      if (!apiKey) {
+        throw new Error('APIキーが設定されていません');
       }
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      sendResponse(data.choices[0].text);
-    })
-    .catch(error => console.error(error));
-    return true;
+      const result = await queryGPT(message.text, message.model, apiKey);
+      sendResponse(result);
+    } catch (error: any) {
+      sendResponse({ error: error.message });
+    }
   }
 });
 
-
-const storage = chrome.storage.sync;
-
-// APIキーの保存と取得を行うための関数を定義
-const setApiKey = (apiKey: string, callback?: () => void) => {
-  if(callback)  storage.set({ apiKey }, callback);
-  else storage.set({ apiKey });
-};
-const getApiKey = (callback: (apiKey?: string) => void) => {
-  storage.get("apiKey", (items) => {
-    const apiKey = items.apiKey as string | undefined;
-    callback(apiKey);
-  });
-};
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  if (message.type === 'setApiKey') {
+    try {
+      await setApiKey(message.apiKey);
+      sendResponse({ success: true });
+    } catch (error: any) {
+      sendResponse({ error: error.message });
+    }
+  }
+});
