@@ -46,7 +46,6 @@ function showPopup(message: string, sel?: Selection|null) {
 // テキストが選択されたら実行する関数
 function handleSelection(): void {
   const selectedText = getSelectedText();
-  const selection = window.getSelection();
   if (selectedText) {
     if (selectedText && selectedText.length > 0) {
       browser.runtime.sendMessage({ action: "query", text: selectedText }).then((result) => {
