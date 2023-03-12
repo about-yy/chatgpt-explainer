@@ -1,14 +1,20 @@
-console.log('ChatGPT Explainer Background Script loaded');
+console.log("background script loaded");
 
-// ポップアップを表示する
-function showPopup(text: string) {
-  chrome.browserAction.setPopup({popup: 'popup.html'});
-  chrome.runtime.sendMessage({type: 'popup_content', text: text});
-}
-
-// メッセージを受け取ったら、ポップアップを表示する
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === 'show_popup') {
-    showPopup(message.text);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "query") {
+    fetch(`https://api.openai.com/v1/engines/davinci-codex/completions?prompt=${request.query}&max_tokens=1024&n=1&stop=%5B%22%5Cn%22%5D`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.API_KEY}`
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      sendResponse(data.choices[0].text);
+    })
+    .catch(error => console.error(error));
+    return true;
   }
 });

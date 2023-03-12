@@ -1,8 +1,20 @@
-console.log('ChatGPT Explainer Content Script loaded');
+console.log("content script loaded");
 
-// メッセージを受け取ったら、ポップアップを表示する
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === 'selection_text') {
-    chrome.runtime.sendMessage({type: 'show_popup', text: message.text});
+document.addEventListener("mouseup", () => {
+  const selection = window.getSelection()?.toString().trim();
+  if (selection && selection.length > 0) {
+    chrome.runtime.sendMessage({action: "query", query: selection}, response => {
+      const popup = document.createElement("div");
+      popup.setAttribute("id", "chatgpt-explainer-popup");
+      popup.innerHTML = response;
+      document.body.appendChild(popup);
+    });
+  }
+});
+
+document.addEventListener("mousedown", () => {
+  const popup = document.getElementById("chatgpt-explainer-popup");
+  if (popup) {
+    popup.remove();
   }
 });
