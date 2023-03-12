@@ -19,17 +19,30 @@ async function queryGPT(text: string, model: string, apiKey: string) {
   return result.choices[0].text.trim();
 }
 
-async function getApiKey() {
-  const { apiKey } = await chrome.storage.sync.get('apiKey');
-  return apiKey;
+async function getApiKey(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get("apiKey", (result) => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        const apiKey = result.apiKey;
+        if (apiKey) {
+          resolve(apiKey);
+        } else {
+          reject(new Error("API key is not set."));
+        }
+      }
+    });
+  });
 }
+
 
 async function setApiKey(apiKey: string) {
   await chrome.storage.sync.set({ apiKey });
 }
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  if (message.type === 'query') {
+  if (message.action === 'query') {
     try {
       const apiKey = await getApiKey();
       if (!apiKey) {

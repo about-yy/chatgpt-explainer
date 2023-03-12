@@ -41,10 +41,6 @@ function showPopup(message: string, sel?: Selection|null) {
   }, 3000);
 }
 
-// chatGptに問い合わせる関数
-async function searchApi(selectedText: string) {
-  return await chrome.runtime.sendMessage({action: "query", query: selectedText})
-};
 
 // テキストが選択されたら実行する関数
 function handleSelection(): void {
@@ -52,15 +48,17 @@ function handleSelection(): void {
   const selection = window.getSelection();
   if (selectedText) {
     if (selectedText && selectedText.length > 0) {
-      searchApi(selectedText).then((result) => {
+      chrome.runtime.sendMessage({action: "query", query: selectedText}, (result)=> {
         if (result) {
           showPopup(result, window.getSelection());
         } else {
-          showPopup('エラーが発生しました', window.getSelection());
+          if(result.error == "APIキーが設定されていません") {
+            showPopup(result.error, window.getSelection());
+          } else {
+            showPopup('エラーが発生しました', window.getSelection());
+          }
         }
-      }).catch(() => {
-        showPopup('エラーが発生しました', window.getSelection());
-      });      
+      })      
     }
   }
 }
