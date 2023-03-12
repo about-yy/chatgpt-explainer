@@ -1,45 +1,26 @@
-const getSelectedText = () => {
-    const selection = window.getSelection();
-    return selection.toString().trim();
-  };
-  
-  const setDescription = (description) => {
-    const descriptionElement = document.getElementById('description');
-    descriptionElement.textContent = description;
-  };
-  
-  const requestDescription = (text) => {
-    const apiKey = 'YOUR_API_KEY_HERE';
-    const endpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions';
-    const prompt = `Please describe "${text}".`;
-    const data = JSON.stringify({
-      prompt,
-      max_tokens: 128,
-      temperature: 0.7,
-      n: 1,
-      stop: '\n'
-    });
-    const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    });
-    const options = {
-      method: 'POST',
-      headers,
-      body: data
-    };
-    return fetch(endpoint, options)
-      .then(response => response.json())
-      .then(data => data.choices[0].text.trim());
-  };
-  
-  const handleSelectedText = () => {
-    const text = getSelectedText();
-    if (text.length > 0) {
-      requestDescription(text)
-        .then(setDescription)
-        .catch(console.error);
-    }
-  };
-  
-  document.addEventListener('mouseup', handleSelectedText);
+import axios from "axios";
+
+const form = document.querySelector("form")!;
+const queryInput = document.getElementById("query") as HTMLInputElement;
+const responseContainer = document.getElementById("response") as HTMLDivElement;
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const query = queryInput.value.trim();
+  if (!query) {
+    return;
+  }
+
+  try {
+    const response = await axios.get(
+      `https://api.openai.com/v1/engines/davinci-codex/completions?prompt=${encodeURIComponent(
+        query
+      )}&max_tokens=150&n=1&stop=\\n`
+    );
+    const explanation = response.data.choices[0].text.trim();
+    responseContainer.innerHTML = explanation;
+  } catch (error) {
+    console.error(error);
+    responseContainer.innerHTML = "Sorry, an error occurred.";
+  }
+});

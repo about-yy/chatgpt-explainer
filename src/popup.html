@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="./popup.css" />
     <title>ChatGPT Explainer</title>
-    <link rel="stylesheet" href="popup.css">
   </head>
   <body>
-    <div id="description"></div>
-    <script src="popup.js"></script>
+    <div class="popup-container">
+      <h1>ChatGPT Explainer</h1>
+      <form>
+        <input id="query" type="text" placeholder="Enter your query" />
+        <button id="submit" type="submit">Get Explanation</button>
+      </form>
+      <div id="response"></div>
+    </div>
+    <script src="./popup.js"></script>
   </body>
 </html>
