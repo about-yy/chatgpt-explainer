@@ -24,6 +24,7 @@ function showPopup(message: string, sel?: Selection|null) {
   popup.style.borderRadius = "5px";
   popup.style.padding = "10px";
   popup.style.zIndex = "99999";
+  popup.style.maxWidth = "40%";
 
   if(sel){
     const range = sel.getRangeAt(0);
@@ -39,7 +40,7 @@ function showPopup(message: string, sel?: Selection|null) {
   
   setTimeout(() => {
     popup.remove();
-  }, 3000);
+  }, 10000);
 }
 
 
