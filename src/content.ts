@@ -1,3 +1,4 @@
+import { browser } from 'webextension-polyfill-ts';
 console.log("content script loaded");
 
 // 選択されたテキストを取得する関数
@@ -48,17 +49,17 @@ function handleSelection(): void {
   const selection = window.getSelection();
   if (selectedText) {
     if (selectedText && selectedText.length > 0) {
-      chrome.runtime.sendMessage({action: "query", query: selectedText}, (result)=> {
-        if (result) {
+      browser.runtime.sendMessage({ action: "query", text: selectedText }).then((result) => {
+        if ( result && !result.error) {
           showPopup(result, window.getSelection());
         } else {
-          if(result.error == "APIキーが設定されていません") {
+          if (result.error == "APIキーが設定されていません") {
             showPopup(result.error, window.getSelection());
           } else {
             showPopup('エラーが発生しました', window.getSelection());
           }
         }
-      })      
+      });
     }
   }
 }
