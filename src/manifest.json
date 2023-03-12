@@ -1,32 +1,30 @@
 {
-    "manifest_version": 2,
-    "name": "ChatGPT Explainer",
-    "version": "1.0",
-    "description": "Get a description of selected text using OpenAI's GPT-3.",
-    "icons": {
-      "48": "icons/chatgpt-48.png",
-      "96": "icons/chatgpt-96.png"
-    },
-    "permissions": ["activeTab", "storage"],
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"]
-      }
-    ],
-    "background": {
-      "scripts": ["background.js"],
-      "persistent": false
-    },
-    "browser_action": {
-      "default_icon": {
-        "48": "icons/chatgpt-48.png",
-        "96": "icons/chatgpt-96.png"
-      },
-      "default_popup": "popup.html"
-    },
-    "web_accessible_resources": [
-      "popup.html"
-    ]
-  }
-  
+  "manifest_version": 2,
+  "name": "ChatGPT Explainer",
+  "version": "1.0.0",
+  "description": "この拡張機能は、ブラウザ上で選択したテキストをChatGPTが説明することができる拡張機能です。選択したテキストを右クリックし、コンテキストメニューからChatGPTを選択すると、ポップアップが表示され、ChatGPTによる説明が得られます。.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "browser_action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "ChatGPT Explainer"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "declarativeContent",
+    "tabs",
+    "https://api.openai.com/*"
+  ],
+  "background": {
+    "scripts": ["background/background.js"],
+    "persistent": false
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content/content.js"]
+  }]
+}

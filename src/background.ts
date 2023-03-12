@@ -1,33 +1,14 @@
-// APIキー
-const apiKey = 'YOUR_API_KEY';
+console.log('ChatGPT Explainer Background Script loaded');
 
-// コンテキストメニューに項目を追加する
-chrome.contextMenus.create({
-  title: 'ChatGPTで説明する',
-  contexts: ['selection'],
-  onclick: function (info, tab) {
-    // 選択したテキストを取得
-    const text = info.selectionText;
-    
-    // APIリクエストを作成
-    const apiUrl = `https://api.openai.com/v1/engines/davinci-codex/completions?model=davinci-codex-2022-02-08&prompt=${encodeURIComponent(text)}&max_tokens=200&n=1&stop=</s>&format=text`;
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    };
-    const requestOptions = {
-      method: 'POST',
-      headers: headers,
-      redirect: 'follow'
-    };
-    
-    // APIリクエストを送信
-    fetch(apiUrl, requestOptions)
-      .then(response => response.text())
-      .then(result => {
-        // レスポンスのテキストを表示
-        alert(result);
-      })
-      .catch(error => console.log('error', error));
+// ポップアップを表示する
+function showPopup(text: string) {
+  chrome.browserAction.setPopup({popup: 'popup.html'});
+  chrome.runtime.sendMessage({type: 'popup_content', text: text});
+}
+
+// メッセージを受け取ったら、ポップアップを表示する
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'show_popup') {
+    showPopup(message.text);
   }
 });
