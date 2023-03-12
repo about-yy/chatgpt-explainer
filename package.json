@@ -2,7 +2,7 @@
   "name": "chatgpt-explainer",
   "version": "1.0.0",
   "description": "この拡張機能は、ブラウザ上で選択したテキストをGPT-3に送信し、その結果をポップアップで表示します。この拡張機能は、英数字のみのテキストに対して機能します。",
-  "main": "src/background.ts",
+  "main": "dist/background.js",
   "scripts": {
     "build": "webpack",
     "watch": "webpack --watch",
