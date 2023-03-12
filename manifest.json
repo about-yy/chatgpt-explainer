@@ -3,13 +3,9 @@
   "name": "ChatGPT Explainer",
   "version": "1.0.0",
   "description": "この拡張機能は、ブラウザ上で選択したテキストをChatGPTが説明することができる拡張機能です。選択したテキストを右クリックし、コンテキストメニューからChatGPTを選択すると、ポップアップが表示され、ChatGPTによる説明が得られます。.",
-  "icons": {
-    "16": "icons/icon-16.png",
-    "48": "icons/icon-48.png",
-    "128": "icons/icon-128.png"
-  },
+
   "browser_action": {
-    "default_popup": "popup/popup.html",
+    "default_popup": "src/popup.html",
     "default_title": "ChatGPT Explainer"
   },
   "permissions": [
@@ -20,11 +16,11 @@
     "https://api.openai.com/*"
   ],
   "background": {
-    "scripts": ["background/background.js"],
+    "scripts": ["dist/background.js"],
     "persistent": false
   },
   "content_scripts": [{
     "matches": ["<all_urls>"],
-    "js": ["content/content.js"]
+    "js": ["dist/content.js"]
   }]
 }
