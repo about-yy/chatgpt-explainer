@@ -43,16 +43,17 @@ async function setApiKey(apiKey: string) {
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   if (message.action === 'query') {
-    try {
-      const apiKey = await getApiKey();
-      if (!apiKey) {
-        throw new Error('APIキーが設定されていません');
-      }
-      const result = await queryGPT(message.text, message.model, apiKey);
-      sendResponse(result);
-    } catch (error: any) {
-      sendResponse({ error: error.message });
-    }
+    sendResponse("hello world")
+    // try {
+    //   const apiKey = await getApiKey();
+    //   if (!apiKey) {
+    //     throw new Error('APIキーが設定されていません');
+    //   }
+    //   const result = await queryGPT(message.text, message.model, apiKey);
+    //   sendResponse(result);
+    // } catch (error: any) {
+    //   sendResponse({ error: error.message });
+    // }
   }
 });
 

@@ -4,7 +4,7 @@
   "description": "この拡張機能は、ブラウザ上で選択したテキストをGPT-3に送信し、その結果をポップアップで表示します。この拡張機能は、英数字のみのテキストに対して機能します。",
   "main": "dist/background.js",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack --mode=development",
     "watch": "webpack --watch",
     "start": "webpack serve"
   },

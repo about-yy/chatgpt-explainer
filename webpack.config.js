@@ -1,11 +1,11 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
+  devtool: 'inline-source-map',
   entry: {
     content: './src/content.ts',
     background: './src/background.ts',
-    popup: './src/popup.ts'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
