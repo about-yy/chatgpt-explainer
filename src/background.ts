@@ -18,3 +18,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 });
+
+
+const storage = chrome.storage.sync;
+
+// APIキーの保存と取得を行うための関数を定義
+const setApiKey = (apiKey: string, callback?: () => void) => {
+  if(callback)  storage.set({ apiKey }, callback);
+  else storage.set({ apiKey });
+};
+const getApiKey = (callback: (apiKey?: string) => void) => {
+  storage.get("apiKey", (items) => {
+    const apiKey = items.apiKey as string | undefined;
+    callback(apiKey);
+  });
+};
